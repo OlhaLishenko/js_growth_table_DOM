@@ -5,67 +5,73 @@ const removeRow = document.querySelector('.remove-row');
 const appendColumn = document.querySelector('.append-column');
 const removeColumn = document.querySelector('.remove-column');
 const table = document.querySelector('.field');
-const row = document.querySelectorAll('tr');
+const rows = document.querySelectorAll('tr');
+const row = document.querySelector('tr');
 
 let rowCounter = 4;
 let columnCounter = 4;
 
 appendRow.addEventListener('click', () => {
-  if (rowCounter === 10) {
-    appendRow.setAttribute('disabled', true);
+  if (rowCounter < 10) {
+    rowCounter++;
 
-    return;
+    removeRow.removeAttribute('disabled');
+
+    const newRow = row.cloneNode(true);
+
+    table.appendChild(newRow);
   }
 
-  const newRow = row.cloneNode(true);
-
-  rowCounter++;
-
-  table.insertAdjacentElement('beforeend', newRow);
+  if (rowCounter === 10) {
+    appendRow.setAttribute('disabled', true);
+  }
 });
 
 removeRow.addEventListener('click', () => {
-  if (rowCounter === 2) {
-    removeRow.setAttribute('disabled', true);
+  if (rowCounter > 2) {
+    rowCounter--;
+    appendRow.removeAttribute('disabled');
 
-    return;
+    const deletedRow = table.rows[table.rows.length - 1];
+
+    deletedRow.remove();
   }
 
-  const deletedRow = table.rows[table.rows.length - 1];
-
-  rowCounter--;
-
-  deletedRow.remove();
+  if (rowCounter === 2) {
+    removeRow.setAttribute('disabled', true);
+  }
 });
 
 appendColumn.addEventListener('click', () => {
-  if (columnCounter === 10) {
-    appendColumn.setAttribute('disabled', true);
+  if (columnCounter < 10) {
+    columnCounter++;
+    removeColumn.removeAttribute('disabled');
 
-    return;
+    rows.forEach((line) => {
+      const newColumn = line.lastElementChild.cloneNode(true);
+
+      line.insertAdjacentElement('beforeend', newColumn);
+    });
   }
 
-  columnCounter++;
-
-  row.forEach((line) => {
-    const newColumn = line.lastElementChild.cloneNode(true);
-
-    line.insertAdjacentElement('beforeend', newColumn);
-  });
+  if (columnCounter === 10) {
+    appendColumn.setAttribute('disabled', true);
+  }
 });
 
 removeColumn.addEventListener('click', () => {
-  if (columnCounter === 2) {
-    removeColumn.setAttribute('disabled', true);
+  if (columnCounter > 2) {
+    columnCounter--;
+    appendColumn.removeAttribute('disabled');
 
-    return;
+    rows.forEach((line) => {
+      const deletedColumn = line.lastElementChild;
+
+      deletedColumn.remove();
+    });
   }
 
-  columnCounter--;
-
-  row.forEach((line) => {
-    const deletedColumn = line.lastElementChild;
-
-    deletedColumn.remove();
-  });
+  if (columnCounter === 2) {
+    removeColumn.setAttribute('disabled', true);
+  }
 });
