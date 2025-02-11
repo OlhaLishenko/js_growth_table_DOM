@@ -5,8 +5,12 @@ const removeRow = document.querySelector('.remove-row');
 const appendColumn = document.querySelector('.append-column');
 const removeColumn = document.querySelector('.remove-column');
 const table = document.querySelector('.field');
-const rows = document.querySelectorAll('tr');
+const tableBody = table.tBodies[0];
+const rows = tableBody.rows;
 const row = document.querySelector('tr');
+
+console.log(tableBody.rows);
+
 
 let rowCounter = 4;
 let columnCounter = 4;
@@ -19,7 +23,7 @@ appendRow.addEventListener('click', () => {
 
     const newRow = row.cloneNode(true);
 
-    table.appendChild(newRow);
+    tableBody.appendChild(newRow);
   }
 
   if (rowCounter === 10) {
@@ -32,7 +36,7 @@ removeRow.addEventListener('click', () => {
     rowCounter--;
     appendRow.removeAttribute('disabled');
 
-    const deletedRow = table.rows[table.rows.length - 1];
+    const deletedRow = tableBody.rows[table.rows.length - 1];
 
     deletedRow.remove();
   }
@@ -47,7 +51,7 @@ appendColumn.addEventListener('click', () => {
     columnCounter++;
     removeColumn.removeAttribute('disabled');
 
-    rows.forEach((line) => {
+    [...rows].forEach((line) => {
       const newColumn = line.lastElementChild.cloneNode(true);
 
       line.insertAdjacentElement('beforeend', newColumn);
@@ -64,7 +68,7 @@ removeColumn.addEventListener('click', () => {
     columnCounter--;
     appendColumn.removeAttribute('disabled');
 
-    rows.forEach((line) => {
+    [...rows].forEach((line) => {
       const deletedColumn = line.lastElementChild;
 
       deletedColumn.remove();
